@@ -102,8 +102,11 @@ class HtmlCacheBaseHelper extends Helper {
 		if ((empty($view->params['url']['ext']) || $view->params['url']['ext'] === 'html') && !preg_match('@.html?$@', $path)) {
 			$path .= DS . 'index.html';
 		}
-		$file = new File($path, true);
-		$file->write($view->output);
+		$dir = dirname($path);
+		if (!is_dir($path)) {
+			mkdir($dir, 0777, true);
+		}
+		file_put_contents($path, $view->output, LOCK_EX);
 	}
 
 /**
