@@ -71,6 +71,10 @@ class HtmlCacheBaseHelper extends Helper {
 			return;
 		}
 
+		if (empty($this->options['www_root'])) {
+			$this->options['www_root'] = WWW_ROOT . 'GET'	. DS;
+		}
+
 		$view =& ClassRegistry::getObject('view');
 
 		//handle 404s
@@ -92,9 +96,9 @@ class HtmlCacheBaseHelper extends Helper {
 			} elseif ($this->options['host']) {
 				$host = DS . $this->options['host'];
 			}
-		}
+		}	
 
-		$path = $this->options['www_root'] . 'cache' . $host . $path;
+		$path = $this->options['www_root'] . $host . $path;
 		if ((empty($view->params['url']['ext']) || $view->params['url']['ext'] === 'html') && !preg_match('@.html?$@', $path)) {
 			$path .= DS . 'index.html';
 		}
@@ -113,11 +117,11 @@ class HtmlCacheBaseHelper extends Helper {
 			return false;
 		}
 
-		if($this->isFlash) {
+		if ($this->isFlash) {
 			return false;
 		}
 
-		if(!empty($this->data)) {
+		if ($_SERVER['REQUEST_METHOD'] != 'GET') {
 			return false;
 		}
 
